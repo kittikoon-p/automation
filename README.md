@@ -141,7 +141,7 @@ npm test           # vitest unit tests
 
 ## 7. Deployment (Vercel)
 
-**Vercel URL:** *ยังไม่ระบุ (เพิ่มหลัง Deploy สำเร็จ)*
+**Vercel URL:** https://automation-phi-peach.vercel.app
 
 1. เข้า https://vercel.com แล้ว **Add New Project** → เชื่อมกับ GitHub Repo
 2. Framework Preset เลือก **Next.js** (Vercel ตรวจจับอัตโนมัติ)
