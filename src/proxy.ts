@@ -34,7 +34,7 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  const isAuthPage = pathname.startsWith("/login");
+  const isAuthPage = pathname.startsWith("/login") || pathname.startsWith("/signup");
   const isPublicPage =
     pathname === "/favicon.ico" ||
     pathname === "/_next/static" ||
