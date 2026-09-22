@@ -13,9 +13,9 @@ function getParam(
 }
 
 const ACTION_STYLES: Record<string, string> = {
-  INSERT: "bg-emerald-500/20 text-emerald-300",
-  UPDATE: "bg-amber-500/20 text-amber-300",
-  DELETE: "bg-red-500/20 text-red-300",
+  INSERT: "bg-emerald-500/20 text-emerald-700 dark:text-emerald-300",
+  UPDATE: "bg-amber-500/20 text-amber-700 dark:text-amber-300",
+  DELETE: "bg-red-500/20 text-red-700 dark:text-red-300",
 };
 
 const TABLE_LABELS: Record<string, string> = {
@@ -141,7 +141,7 @@ export default async function AuditLogPage({
                   <td className="px-4 py-3">
                     <span
                       className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                        ACTION_STYLES[log.action] ?? "bg-slate-500/20 text-slate-300"
+                        ACTION_STYLES[log.action] ?? "bg-slate-500/20 text-slate-700 dark:text-slate-300"
                       }`}
                     >
                       {log.action}

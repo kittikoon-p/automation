@@ -9,10 +9,10 @@ import { createClient } from "@/lib/supabase/client";
 import type { NotificationRow, NotificationType } from "@/lib/db/types";
 
 const TYPE_STYLES: Record<NotificationType, string> = {
-  alarm: "bg-red-500/20 text-red-300",
-  machine: "bg-amber-500/20 text-amber-300",
-  maintenance: "bg-cyan-500/20 text-cyan-300",
-  info: "bg-slate-500/20 text-slate-300",
+  alarm: "bg-red-500/20 text-red-700 dark:text-red-300",
+  machine: "bg-amber-500/20 text-amber-700 dark:text-amber-300",
+  maintenance: "bg-cyan-500/20 text-cyan-700 dark:text-cyan-300",
+  info: "bg-slate-500/20 text-slate-700 dark:text-slate-300",
 };
 
 const TYPE_LABELS: Record<NotificationType, string> = {

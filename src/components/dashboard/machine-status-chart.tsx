@@ -44,12 +44,12 @@ export default function MachineStatusChart({
       <div className="h-64">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} margin={{ top: 5, right: 10, left: -15, bottom: 5 }}>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
-            <XAxis dataKey="name" tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={{ stroke: "rgba(148,163,184,0.2)" }} tickLine={false} />
-            <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
+            <XAxis dataKey="name" tick={{ fontSize: 12, fill: "var(--chart-tick)" }} axisLine={{ stroke: "var(--chart-grid)" }} tickLine={false} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "var(--chart-tick)" }} axisLine={false} tickLine={false} />
             <Tooltip
-              cursor={{ fill: "rgba(148,163,184,0.08)" }}
-              contentStyle={{ background: "#0b1220", border: "1px solid rgba(148,163,184,0.25)", borderRadius: 12, color: "#e2e8f0" }}
+              cursor={{ fill: "var(--chart-grid)" }}
+              contentStyle={{ background: "var(--surface-strong)", border: "1px solid var(--glass-border)", borderRadius: 12, color: "var(--fg)" }}
             />
             <Bar dataKey="value" radius={[6, 6, 0, 0]}>
               {data.map((entry) => (

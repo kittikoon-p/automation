@@ -52,18 +52,18 @@ export default function AlarmTrendChart({ alarms }: { alarms: Alarm[] }) {
                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="var(--chart-grid)" vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 10, fill: "#94a3b8" }}
+              tick={{ fontSize: 10, fill: "var(--chart-tick)" }}
               tickFormatter={(v: string) => v.slice(5)}
-              axisLine={{ stroke: "rgba(148,163,184,0.2)" }}
+              axisLine={{ stroke: "var(--chart-grid)" }}
               tickLine={false}
             />
-            <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+            <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "var(--chart-tick)" }} axisLine={false} tickLine={false} />
             <Tooltip
-              contentStyle={{ background: "#0b1220", border: "1px solid rgba(148,163,184,0.25)", borderRadius: 12, color: "#e2e8f0" }}
-              itemStyle={{ color: "#e2e8f0" }}
+              contentStyle={{ background: "var(--surface-strong)", border: "1px solid var(--glass-border)", borderRadius: 12, color: "var(--fg)" }}
+              itemStyle={{ color: "var(--fg)" }}
             />
             <Area
               type="monotone"

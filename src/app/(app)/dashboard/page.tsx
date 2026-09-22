@@ -106,31 +106,31 @@ export default async function DashboardPage() {
             icon={Cpu}
             label="เครื่องจักรทั้งหมด"
             value={totalMachines}
-            accent="bg-blue-500/20 text-blue-300"
+            accent="bg-blue-500/20 text-blue-700 dark:text-blue-300"
           />
           <StatCard
             icon={PlayCircle}
             label="Running"
             value={running}
-            accent="bg-emerald-500/20 text-emerald-300"
+            accent="bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
           />
           <StatCard
             icon={PauseCircle}
             label="Stop"
             value={stop}
-            accent="bg-slate-500/20 text-slate-300"
+            accent="bg-slate-500/20 text-slate-700 dark:text-slate-300"
           />
           <StatCard
             icon={AlertTriangle}
             label="Alarm"
             value={alerting}
-            accent="bg-red-500/20 text-red-300"
+            accent="bg-red-500/20 text-red-700 dark:text-red-300"
           />
           <StatCard
             icon={Wrench}
             label="Maintenance"
             value={maintaining}
-            accent="bg-amber-500/20 text-amber-300"
+            accent="bg-amber-500/20 text-amber-700 dark:text-amber-300"
           />
         </div>
       </section>
@@ -145,25 +145,25 @@ export default async function DashboardPage() {
             icon={AlertTriangle}
             label="Alarm ทั้งหมด"
             value={alarms.length}
-            accent="bg-red-500/20 text-red-300"
+            accent="bg-red-500/20 text-red-700 dark:text-red-300"
           />
           <StatCard
             icon={Activity}
             label="Alarm เปิดค้าง (Open)"
             value={openAlarms}
-            accent="bg-orange-500/20 text-orange-300"
+            accent="bg-orange-500/20 text-orange-700 dark:text-orange-300"
           />
           <StatCard
             icon={Hammer}
             label="งานบำรุงรักษา"
             value={maintenance.length}
-            accent="bg-amber-500/20 text-amber-300"
+            accent="bg-amber-500/20 text-amber-700 dark:text-amber-300"
           />
           <StatCard
             icon={Cog}
             label="งานรอแก้ไข (Pending)"
             value={pendingMaint}
-            accent="bg-purple-500/20 text-purple-300"
+            accent="bg-purple-500/20 text-purple-700 dark:text-purple-300"
           />
         </div>
       </section>
@@ -193,19 +193,19 @@ export default async function DashboardPage() {
             icon={Gauge}
             label="อัตราการปิด Alarm (Close Rate)"
             value={`${closeRate}%`}
-            accent="bg-emerald-500/20 text-emerald-300"
+            accent="bg-emerald-500/20 text-emerald-700 dark:text-emerald-300"
           />
           <StatCard
             icon={TrendingUp}
             label="Alarm เฉลี่ยต่อวัน (14 วัน)"
             value={avgPerDay}
-            accent="bg-cyan-500/20 text-cyan-300"
+            accent="bg-cyan-500/20 text-cyan-700 dark:text-cyan-300"
           />
           <StatCard
             icon={Cpu}
             label="เครื่องจักรที่ Alarm บ่อยที่สุด"
             value={topMachine ? `${topMachine.name} (${topMachine.count})` : "—"}
-            accent="bg-red-500/20 text-red-300"
+            accent="bg-red-500/20 text-red-700 dark:text-red-300"
           />
         </div>
         <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">

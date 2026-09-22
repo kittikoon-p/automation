@@ -1,14 +1,85 @@
 @import "tailwindcss";
 
+/*
+  Theming: light is the default (:root), dark is opt-in via the .dark class.
+  Tailwind palette tokens are mapped to CSS variables below, so the EXISTING
+  utility classes (text-white, text-slate-*, bg-white/5, border-white/10,
+  divide-white/5, ...) switch automatically between the two themes without
+  touching the components that use them.
+*/
+
 :root {
-  --background: #060913;
-  --foreground: #e2e8f0;
-  --accent-glow: rgba(56, 189, 248, 0.12);
+  color-scheme: light;
+
+  --bg: #f4f7fb;
+  --surface: #ffffff;
+  --surface-strong: #ffffff;
+  --field: #ffffff;
+
+  --fg: #0f172a;              /* maps to text-white */
+  --fg-soft: #1e293b;         /* maps to text-slate-100/300 */
+  --heading: #1e293b;         /* maps to text-slate-200 */
+  --muted: #64748b;           /* maps to text-slate-400 */
+  --muted-2: #94a3b8;         /* maps to text-slate-500 */
+
+  --body-glow-1: rgba(56, 189, 248, 0.1);
+  --body-glow-2: rgba(168, 85, 247, 0.08);
+
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --glass-border: rgba(100, 116, 139, 0.22);
+  --glass-strong-bg: rgba(255, 255, 255, 0.94);
+
+  --chart-grid: rgba(100, 116, 139, 0.2);
+  --chart-tick: #64748b;
+  --chart-label: #334155;
+  --chart-accent: #0284c7;
+}
+
+.dark {
+  color-scheme: dark;
+
+  --bg: #060913;
+  --surface: #0a101c;
+  --surface-strong: #0b1220;
+  --field: #0f172a;
+
+  --fg: #ffffff;
+  --fg-soft: #cbd5e1;
+  --heading: #e2e8f0;
+  --muted: #94a3b8;
+  --muted-2: #64748b;
+
+  --body-glow-1: rgba(56, 189, 248, 0.15);
+  --body-glow-2: rgba(168, 85, 247, 0.13);
+
+  --glass-bg: rgba(148, 163, 184, 0.06);
+  --glass-border: rgba(148, 163, 184, 0.16);
+  --glass-strong-bg: rgba(10, 15, 27, 0.86);
+
+  --chart-grid: rgba(148, 163, 184, 0.15);
+  --chart-tick: #94a3b8;
+  --chart-label: #94a3b8;
+  --chart-accent: #38bdf8;
+}
+
+@theme inline {
+  --color-white: var(--fg);
+  --color-slate-50: var(--fg);
+  --color-slate-100: var(--fg-soft);
+  --color-slate-200: var(--heading);
+  --color-slate-300: var(--fg-soft);
+  --color-slate-400: var(--muted);
+  --color-slate-500: var(--muted-2);
+  --color-slate-600: var(--muted);
+  --color-slate-700: var(--fg-soft);
+  --color-slate-800: var(--fg);
+  --color-slate-900: var(--fg);
+  --color-slate-950: var(--fg);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+  scrollbar-color: rgba(100, 116, 139, 0.45) transparent;
 }
 
 *::-webkit-scrollbar {
@@ -16,68 +87,64 @@
   height: 8px;
 }
 *::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.35);
+  background: rgba(100, 116, 139, 0.4);
   border-radius: 9999px;
 }
 *::-webkit-scrollbar-track {
   background: transparent;
 }
 
-html {
-  color-scheme: dark;
-}
-
 body {
   background: radial-gradient(
       circle at 15% -10%,
-      rgba(56, 189, 248, 0.15),
+      var(--body-glow-1),
       transparent 45%
     ),
     radial-gradient(
       circle at 85% 110%,
-      rgba(168, 85, 247, 0.13),
+      var(--body-glow-2),
       transparent 45%
     ),
-    var(--background);
-  color: var(--foreground);
+    var(--bg);
+  color: var(--fg);
   min-height: 100vh;
 }
 
 /* ---------- Reusable "control room" primitives ---------- */
 
 .glass {
-  background: rgba(148, 163, 184, 0.06);
-  border: 1px solid rgba(148, 163, 184, 0.16);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(10px);
 }
 
 .glass-strong {
-  background: rgba(10, 15, 27, 0.86);
-  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: var(--glass-strong-bg);
+  border: 1px solid var(--glass-border);
   backdrop-filter: blur(14px);
 }
 
 .input {
   width: 100%;
   border-radius: 0.75rem;
-  border: 1px solid rgba(148, 163, 184, 0.28);
-  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--glass-border);
+  background: var(--field);
   padding: 0.625rem 0.875rem;
   font-size: 0.875rem;
-  color: var(--foreground);
+  color: var(--fg);
   outline: none;
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 .input::placeholder {
-  color: rgb(100 116 139 / 0.8);
+  color: var(--muted-2);
 }
 .input:focus {
   border-color: rgb(56 189 248 / 0.7);
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
 }
 select.input option {
-  background: #0f172a;
-  color: #e2e8f0;
+  background: var(--field);
+  color: var(--fg);
 }
 
 .btn-primary {
@@ -115,27 +182,27 @@ select.input option {
   padding: 0.625rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgb(203 213 225);
-  background: rgba(148, 163, 184, 0.08);
-  border: 1px solid rgba(148, 163, 184, 0.25);
+  color: var(--fg-soft);
+  background: color-mix(in srgb, var(--fg-soft) 8%, transparent);
+  border: 1px solid color-mix(in srgb, var(--fg-soft) 25%, transparent);
   transition: background 0.15s, border-color 0.15s;
 }
 .btn-ghost:hover {
-  background: rgba(148, 163, 184, 0.16);
-  border-color: rgba(148, 163, 184, 0.35);
+  background: color-mix(in srgb, var(--fg-soft) 16%, transparent);
+  border-color: color-mix(in srgb, var(--fg-soft) 35%, transparent);
 }
 
 .icon-btn {
   border-radius: 0.5rem;
   padding: 0.375rem;
-  color: rgb(148 163 184);
+  color: var(--muted);
   transition: color 0.15s, background 0.15s;
 }
 .icon-btn:hover {
-  color: #38bdf8;
+  color: var(--chart-accent);
   background: rgba(56, 189, 248, 0.12);
 }
 .icon-btn--danger:hover {
-  color: #f87171;
+  color: #ef4444;
   background: rgba(239, 68, 68, 0.12);
 }

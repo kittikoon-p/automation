@@ -44,7 +44,7 @@ export default function AlarmStatusChart({
               label={({ name, percent }: { name?: string; percent?: number }) =>
                 `${name ?? ""} ${((percent ?? 0) * 100).toFixed(0)}%`
               }
-              labelLine={{ stroke: "rgba(148,163,184,0.4)" }}
+              labelLine={{ stroke: "var(--chart-grid)" }}
             >
               {data.map((entry, index) => (
                 <Cell
@@ -54,10 +54,10 @@ export default function AlarmStatusChart({
               ))}
             </Pie>
             <Tooltip
-              contentStyle={{ background: "#0b1220", border: "1px solid rgba(148,163,184,0.25)", borderRadius: 12, color: "#e2e8f0" }}
-              itemStyle={{ color: "#e2e8f0" }}
+              contentStyle={{ background: "var(--surface-strong)", border: "1px solid var(--glass-border)", borderRadius: 12, color: "var(--fg)" }}
+              itemStyle={{ color: "var(--fg)" }}
             />
-            <Legend wrapperStyle={{ color: "#94a3b8", fontSize: 12 }} />
+            <Legend wrapperStyle={{ color: "var(--chart-tick)", fontSize: 12 }} />
           </PieChart>
         </ResponsiveContainer>
       </div>

@@ -30,7 +30,7 @@
 | Search & Filter | ค้นหา/กรองขั้นสูงตาม Machine ID, ชื่อ, Status, Type, Location, Alarm Code/Cause, ประเภทงาน, ช่วงวันที่ ฯลฯ |
 | Export | ดาวน์โหลดข้อมูลเป็น CSV และ Excel (.xls) จากหน้าแสดงข้อมูล |
 | Input Validation | Zod validation ทุกฟอร์ม + เช็ค Machine ID ซ้ำ + แสดงข้อความแจ้งเตือน |
-| UI | ธีมมืด (Dark Mode) สไตล์ Industrial Control Room + Responsive บนมือถือ (Mobile Drawer Menu) |
+| UI | ธีมมืด (Dark Mode) สไตล์ Industrial Control Room + ปุ่มสลับ **ธีมสว่าง/มืด** (Dark/Light toggle) + Responsive บนมือถือ (Mobile Drawer Menu) |
 
 ### สถานะของแต่ละ Entity
 - **เครื่องจักร**: `Running` / `Stop` / `Alarm` / `Maintenance`
