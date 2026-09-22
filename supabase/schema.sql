@@ -6,6 +6,10 @@
 -- Section 0 drops any previously-created objects first, so re-running
 -- this file on a dev project is always safe. NOTE: this DELETES all
 -- rows in the affected tables.
+--
+-- If you ever see "ERROR: 42710: type "user_role" already exists"
+-- (usually from a previous partial run), just re-run this ENTIRE file:
+-- Section 0 resets those types and Section 1 rebuilds them safely.
 -- ============================================================
 
 -- ------------------------------------------------------------------
@@ -58,11 +62,45 @@ drop type if exists public.user_role      cascade;
 
 -- ------------------------------------------------------------------
 -- 1. ENUM TYPES
+--    Created defensively: if the type already exists (e.g. old version
+--    without 'viewer', or a previous partial run) the script repairs it
+--    instead of failing with: ERROR: 42710 type "... " already exists.
+--    A normal full run still goes through RESET of Section 0 first.
 -- ------------------------------------------------------------------
-create type public.user_role      as enum ('admin', 'technician', 'viewer');
-create type public.machine_status as enum ('Running', 'Stop', 'Alarm', 'Maintenance');
-create type public.alarm_status   as enum ('Open', 'In Progress', 'Closed');
-create type public.maint_status   as enum ('Pending', 'In Progress', 'Completed');
+do $$ begin
+  -- user_role needs the extra 'viewer' member -> rebuild if missing/outdated
+  if not exists (select 1 from pg_type t
+                 where t.typname = 'user_role' and t.typnamespace = 'public'::regnamespace)
+     or not exists (select 1 from pg_enum e
+                    join pg_type t on t.oid = e.enumtypid
+                    where t.typname = 'user_role'
+                      and t.typnamespace = 'public'::regnamespace
+                      and e.enumlabel = 'viewer') then
+    drop type if exists public.user_role cascade;
+    create type public.user_role as enum ('admin', 'technician', 'viewer');
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1 from pg_type t
+                 where t.typname = 'machine_status' and t.typnamespace = 'public'::regnamespace) then
+    create type public.machine_status as enum ('Running', 'Stop', 'Alarm', 'Maintenance');
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1 from pg_type t
+                 where t.typname = 'alarm_status' and t.typnamespace = 'public'::regnamespace) then
+    create type public.alarm_status as enum ('Open', 'In Progress', 'Closed');
+  end if;
+end $$;
+
+do $$ begin
+  if not exists (select 1 from pg_type t
+                 where t.typname = 'maint_status' and t.typnamespace = 'public'::regnamespace) then
+    create type public.maint_status as enum ('Pending', 'In Progress', 'Completed');
+  end if;
+end $$;
 
 -- ------------------------------------------------------------------
 -- 2. PROFILES (extends auth.users, holds the role)
