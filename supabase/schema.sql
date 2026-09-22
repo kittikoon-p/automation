@@ -29,13 +29,17 @@ drop trigger if exists alarms_notify              on public.alarms;
 drop trigger if exists machines_notify            on public.machines;
 drop trigger if exists maintenance_notify         on public.maintenance_records;
 
-alter table public.machines            disable row level security;
-alter table public.alarms              disable row level security;
-alter table public.maintenance_records disable row level security;
-alter table public.profiles            disable row level security;
-alter table public.machine_history     disable row level security;
-alter table public.audit_logs          disable row level security;
-alter table public.notifications       disable row level security;
+-- Disable RLS defensively: only if the table already exists (a fresh or
+-- partially-upgraded database may not have all of them yet).
+do $$ begin
+  if to_regclass('public.machines')            is not null then alter table public.machines            disable row level security; end if;
+  if to_regclass('public.alarms')              is not null then alter table public.alarms              disable row level security; end if;
+  if to_regclass('public.maintenance_records') is not null then alter table public.maintenance_records disable row level security; end if;
+  if to_regclass('public.profiles')            is not null then alter table public.profiles            disable row level security; end if;
+  if to_regclass('public.machine_history')     is not null then alter table public.machine_history     disable row level security; end if;
+  if to_regclass('public.audit_logs')          is not null then alter table public.audit_logs          disable row level security; end if;
+  if to_regclass('public.notifications')       is not null then alter table public.notifications       disable row level security; end if;
+end $$;
 
 drop table if exists public.maintenance_records cascade;
 drop table if exists public.alarms      cascade;
