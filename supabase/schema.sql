@@ -1,7 +1,41 @@
 -- ============================================================
 -- Automation Web Application - Supabase Database Schema
 -- Run this in the Supabase SQL Editor (Dashboard > SQL > New query)
+--
+-- The script is IDEMPOTENT: it can be re-run as many times as needed.
+-- Section 0 drops any previously-created objects first, so re-running
+-- this file on a dev project is always safe. NOTE: this DELETES all
+-- rows in the affected tables.
 -- ============================================================
+
+-- ------------------------------------------------------------------
+-- 0. RESET (dev-friendly; safe to re-run)
+--    Removes every object this schema creates so it can be applied
+--    repeatedly without errors.
+-- ------------------------------------------------------------------
+drop trigger if exists on_auth_user_created on auth.users;
+drop trigger if exists machines_updated_at    on public.machines;
+drop trigger if exists alarms_updated_at      on public.alarms;
+drop trigger if exists maintenance_updated_at on public.maintenance_records;
+
+alter table public.machines            disable row level security;
+alter table public.alarms              disable row level security;
+alter table public.maintenance_records disable row level security;
+alter table public.profiles            disable row level security;
+
+drop table if exists public.maintenance_records cascade;
+drop table if exists public.alarms      cascade;
+drop table if exists public.machines    cascade;
+drop table if exists public.profiles    cascade;
+
+drop function if exists public.set_updated_at   cascade;
+drop function if exists public.handle_new_user  cascade;
+drop function if exists public.current_role     cascade;
+
+drop type if exists public.maint_status   cascade;
+drop type if exists public.alarm_status   cascade;
+drop type if exists public.machine_status cascade;
+drop type if exists public.user_role      cascade;
 
 -- ------------------------------------------------------------------
 -- 1. ENUM TYPES
