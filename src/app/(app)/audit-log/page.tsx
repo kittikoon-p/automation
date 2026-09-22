@@ -1,5 +1,6 @@
 import { ScrollText } from "lucide-react";
 
+import DbSetupNotice from "@/components/ui/db-setup-notice";
 import { fetchAuditLogs } from "@/lib/db/data";
 import { requireUser } from "@/lib/db/guard";
 
@@ -54,15 +55,22 @@ export default async function AuditLogPage({
   await requireUser("admin");
   const sp = await searchParams;
 
-  const logs = await fetchAuditLogs({
-    table: getParam(sp, "table"),
-    action: getParam(sp, "action"),
-    from: getParam(sp, "from"),
-    to: getParam(sp, "to"),
-  });
+  let logs: Awaited<ReturnType<typeof fetchAuditLogs>> = [];
+  let dbReady = true;
+  try {
+    logs = await fetchAuditLogs({
+      table: getParam(sp, "table"),
+      action: getParam(sp, "action"),
+      from: getParam(sp, "from"),
+      to: getParam(sp, "to"),
+    });
+  } catch {
+    dbReady = false;
+  }
 
   return (
     <div className="space-y-6">
+      {!dbReady && <DbSetupNotice />}
       <header>
         <h1 className="flex items-center gap-2 text-2xl font-bold text-white">
           <ScrollText className="h-6 w-6 text-amber-400" /> Audit Log

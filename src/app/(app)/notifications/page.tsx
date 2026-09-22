@@ -1,16 +1,24 @@
 import { Bell, BellRing } from "lucide-react";
 
 import NotificationList from "@/components/notifications/notification-list";
+import DbSetupNotice from "@/components/ui/db-setup-notice";
 import { fetchMyNotifications } from "@/lib/db/data";
 import { requireUser } from "@/lib/db/guard";
 
 export default async function NotificationsPage() {
   await requireUser();
-  const notifications = await fetchMyNotifications();
+  let notifications: Awaited<ReturnType<typeof fetchMyNotifications>> = [];
+  let dbReady = true;
+  try {
+    notifications = await fetchMyNotifications();
+  } catch {
+    dbReady = false;
+  }
   const unread = notifications.filter((n) => !n.read_at).length;
 
   return (
     <div className="space-y-6">
+      {!dbReady && <DbSetupNotice />}
       <header>
         <h1 className="flex items-center gap-2 text-2xl font-bold text-white">
           {unread > 0 ? (

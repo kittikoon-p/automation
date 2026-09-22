@@ -1,5 +1,6 @@
 import { History } from "lucide-react";
 
+import DbSetupNotice from "@/components/ui/db-setup-notice";
 import { StatusPill } from "@/components/ui/status-pill";
 import { fetchMachineHistory, fetchMachineOptions } from "@/lib/db/data";
 import { requireUser } from "@/lib/db/guard";
@@ -20,17 +21,25 @@ export default async function MachineHistoryPage({
   await requireUser();
   const sp = await searchParams;
 
-  const [history, machines] = await Promise.all([
-    fetchMachineHistory({
-      machineId: getParam(sp, "machineId"),
-      from: getParam(sp, "from"),
-      to: getParam(sp, "to"),
-    }),
-    fetchMachineOptions(),
-  ]);
+  let history: Awaited<ReturnType<typeof fetchMachineHistory>> = [];
+  let machines: Awaited<ReturnType<typeof fetchMachineOptions>> = [];
+  let dbReady = true;
+  try {
+    [history, machines] = await Promise.all([
+      fetchMachineHistory({
+        machineId: getParam(sp, "machineId"),
+        from: getParam(sp, "from"),
+        to: getParam(sp, "to"),
+      }),
+      fetchMachineOptions(),
+    ]);
+  } catch {
+    dbReady = false;
+  }
 
   return (
     <div className="space-y-6">
+      {!dbReady && <DbSetupNotice />}
       <header>
         <h1 className="flex items-center gap-2 text-2xl font-bold text-white">
           <History className="h-6 w-6 text-violet-400" /> ประวัติเครื่องจักร
