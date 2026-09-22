@@ -91,8 +91,8 @@
 
 1. **Clone โปรเจกต์**
    ```bash
-   git clone https://github.com/<your-username>/<your-repo>.git
-   cd <your-repo>
+   git clone https://github.com/kittikoon-p/automation.git
+   cd automation
    npm install
    ```
 
