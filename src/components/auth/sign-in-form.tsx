@@ -41,11 +41,11 @@ export default function SignInForm() {
   }
 
   return (
-    <form onSubmit={handleSignIn} className="mt-8 space-y-5">
+    <form onSubmit={handleSignIn} className="relative mt-8 space-y-5">
       <div>
         <label
           htmlFor="email"
-          className="mb-1.5 block text-sm font-medium text-zinc-700"
+          className="mb-1.5 block text-sm font-medium text-slate-300"
         >
           อีเมล
         </label>
@@ -57,7 +57,7 @@ export default function SignInForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          className="input"
           placeholder="you@company.com"
         />
       </div>
@@ -65,7 +65,7 @@ export default function SignInForm() {
       <div>
         <label
           htmlFor="password"
-          className="mb-1.5 block text-sm font-medium text-zinc-700"
+          className="mb-1.5 block text-sm font-medium text-slate-300"
         >
           รหัสผ่าน
         </label>
@@ -77,13 +77,13 @@ export default function SignInForm() {
           autoComplete="current-password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          className="input"
           placeholder="••••••••"
         />
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-xs text-zinc-400">
+        <span className="text-xs text-slate-500">
           ผู้ใช้รายแรกที่ลงทะเบียนจะได้สิทธิ์ Admin
         </span>
       </div>
@@ -91,7 +91,7 @@ export default function SignInForm() {
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700"
+          className="rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300"
         >
           {error}
         </p>
@@ -100,7 +100,7 @@ export default function SignInForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        className="btn-primary w-full"
       >
         {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
       </button>

@@ -120,13 +120,13 @@ export default function AlarmFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             เครื่องจักร *
           </label>
           <select
             value={form.machine_id}
             onChange={set("machine_id")}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           >
             <option value="">-- เลือกเครื่องจักร --</option>
             {machines.map((m) => (
@@ -139,35 +139,35 @@ export default function AlarmFormModal({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               Alarm Code *
             </label>
             <input
               value={form.alarm_code}
               onChange={set("alarm_code")}
               placeholder="AL-1001"
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               Date / Time *
             </label>
             <input
               type="datetime-local"
               value={form.occurred_at}
               onChange={set("occurred_at")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               สถานะ *
             </label>
             <select
               value={form.status}
               onChange={set("status")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             >
               {ALARM_STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -179,7 +179,7 @@ export default function AlarmFormModal({
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             Alarm Description *
           </label>
           <textarea
@@ -187,12 +187,12 @@ export default function AlarmFormModal({
             onChange={set("alarm_description")}
             rows={2}
             placeholder="คำอธิบายเหตุการณ์ Alarm"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             สาเหตุ (Cause)
           </label>
           <textarea
@@ -200,35 +200,31 @@ export default function AlarmFormModal({
             onChange={set("cause")}
             rows={2}
             placeholder="สาเหตุที่เกิด Alarm"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           />
         </div>
 
         {errors.length > 0 && (
-          <ul className="space-y-1 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <ul className="space-y-1 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {errors.map((err) => (
               <li key={err}>• {err}</li>
             ))}
           </ul>
         )}
         {serverError && (
-          <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {serverError}
           </p>
         )}
 
         <div className="flex justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-          >
+          <button type="button" onClick={onClose} className="btn-ghost">
             ยกเลิก
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+            className="btn-primary disabled:opacity-60"
           >
             {loading ? "บันทึก..." : "บันทึก"}
           </button>

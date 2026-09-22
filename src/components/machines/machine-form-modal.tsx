@@ -107,7 +107,7 @@ export default function MachineFormModal({
     >
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             Machine ID *
           </label>
           <input
@@ -115,55 +115,55 @@ export default function MachineFormModal({
             onChange={set("machine_id")}
             disabled={!!machine}
             placeholder="MCH-001"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200 disabled:bg-zinc-100"
+            className="input disabled:cursor-not-allowed disabled:opacity-60"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             ชื่อเครื่องจักร (Machine Name) *
           </label>
           <input
             value={form.name}
             onChange={set("name")}
             placeholder="Press Machine 1"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           />
         </div>
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               ประเภท (Machine Type) *
             </label>
             <input
               value={form.type}
               onChange={set("type")}
               placeholder="Press"
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               ตำแหน่ง (Location) *
             </label>
             <input
               value={form.location}
               onChange={set("location")}
               placeholder="Building A"
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             />
           </div>
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             สถานะ *
           </label>
           <select
             value={form.status}
             onChange={set("status")}
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           >
             {MACHINE_STATUSES.map((s) => (
               <option key={s} value={s}>
@@ -174,30 +174,26 @@ export default function MachineFormModal({
         </div>
 
         {errors.length > 0 && (
-          <ul className="space-y-1 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <ul className="space-y-1 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {errors.map((err) => (
               <li key={err}>• {err}</li>
             ))}
           </ul>
         )}
         {serverError && (
-          <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {serverError}
           </p>
         )}
 
         <div className="flex justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-          >
+          <button type="button" onClick={onClose} className="btn-ghost">
             ยกเลิก
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+            className="btn-primary disabled:opacity-60"
           >
             {loading ? "บันทึก..." : "บันทึก"}
           </button>

@@ -50,21 +50,18 @@ export default function MachineManager({
   return (
     <>
       <div className="flex items-center justify-between">
-        <p className="text-sm text-zinc-500">ทั้งหมด {machines.length} เครื่อง</p>
+        <p className="text-sm text-slate-400">ทั้งหมด {machines.length} เครื่อง</p>
         {isAdmin && (
-          <button
-            onClick={openAdd}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-          >
+          <button onClick={openAdd} className="btn-primary">
             <Plus className="h-4 w-4" /> เพิ่มเครื่องจักร
           </button>
         )}
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
+            <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">Machine ID</th>
                 <th className="px-4 py-3">ชื่อ</th>
@@ -74,25 +71,25 @@ export default function MachineManager({
                 {isAdmin && <th className="px-4 py-3 text-right">จัดการ</th>}
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-white/5">
               {machines.length === 0 && (
                 <tr>
                   <td
                     colSpan={isAdmin ? 6 : 5}
-                    className="px-4 py-10 text-center text-zinc-400"
+                    className="px-4 py-10 text-center text-slate-500"
                   >
                     ไม่พบข้อมูลเครื่องจักร
                   </td>
                 </tr>
               )}
               {machines.map((m) => (
-                <tr key={m.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3 font-mono font-semibold text-zinc-900">
+                <tr key={m.id} className="transition hover:bg-white/5">
+                  <td className="px-4 py-3 font-mono font-semibold text-white">
                     {m.machine_id}
                   </td>
-                  <td className="px-4 py-3 text-zinc-800">{m.name}</td>
-                  <td className="px-4 py-3 text-zinc-600">{m.type}</td>
-                  <td className="px-4 py-3 text-zinc-600">{m.location}</td>
+                  <td className="px-4 py-3 text-slate-200">{m.name}</td>
+                  <td className="px-4 py-3 text-slate-400">{m.type}</td>
+                  <td className="px-4 py-3 text-slate-400">{m.location}</td>
                   <td className="px-4 py-3">
                     <StatusPill value={m.status} />
                   </td>
@@ -102,7 +99,7 @@ export default function MachineManager({
                         <button
                           onClick={() => openEdit(m)}
                           title="แก้ไข"
-                          className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-blue-50 hover:text-blue-600"
+                          className="icon-btn"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
@@ -110,7 +107,7 @@ export default function MachineManager({
                           onClick={() => handleDelete(m.id, m.machine_id)}
                           disabled={deleting === m.id}
                           title="ลบ"
-                          className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                          className="icon-btn icon-btn--danger disabled:opacity-50"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

@@ -17,21 +17,21 @@ export default function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
       aria-label={title}
     >
       <div
-        className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6 shadow-2xl"
+        className="glass-strong max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl p-6 shadow-[0_0_60px_rgba(14,165,233,0.15)]"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="text-lg font-bold text-zinc-900">{title}</h2>
+          <h2 className="text-lg font-bold text-white">{title}</h2>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-zinc-400 transition hover:bg-zinc-100 hover:text-zinc-700"
+            className="icon-btn"
             aria-label="ปิด"
           >
             <X className="h-5 w-5" />

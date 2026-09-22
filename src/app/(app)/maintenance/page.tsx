@@ -36,32 +36,25 @@ export default async function MaintenancePage({
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="text-2xl font-bold text-zinc-900">งานบำรุงรักษา</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <h1 className="text-2xl font-bold text-white">งานบำรุงรักษา</h1>
+        <p className="mt-1 text-sm text-slate-400">
           บันทึกและติดตามงานบำรุงรักษาเครื่องจักร
         </p>
       </header>
 
       {/* Search & Filter */}
-      <form
-        method="get"
-        className="rounded-2xl border border-zinc-200 bg-white p-4 shadow-sm"
-      >
+      <form method="get" className="glass rounded-2xl p-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-7">
           <div className="relative xl:col-span-2">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-zinc-400" />
+            <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <input
               name="search"
               defaultValue={sp.search}
               placeholder="ค้นหาปัญหา, การดำเนินการ หรือ ช่าง..."
-              className="w-full rounded-lg border border-zinc-300 py-2 pl-9 pr-3 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input pl-9"
             />
           </div>
-          <select
-            name="status"
-            defaultValue={sp.status}
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          >
+          <select name="status" defaultValue={sp.status} className="input">
             <option value="">สถานะทั้งหมด</option>
             {MAINTENANCE_STATUSES.map((s) => (
               <option key={s} value={s}>
@@ -69,11 +62,7 @@ export default async function MaintenancePage({
               </option>
             ))}
           </select>
-          <select
-            name="machineId"
-            defaultValue={sp.machineId}
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          >
+          <select name="machineId" defaultValue={sp.machineId} className="input">
             <option value="">เครื่องจักรทั้งหมด</option>
             {machines.map((m) => (
               <option key={m.id} value={m.id}>
@@ -81,29 +70,13 @@ export default async function MaintenancePage({
               </option>
             ))}
           </select>
-          <input
-            type="date"
-            name="from"
-            defaultValue={sp.from}
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          />
-          <input
-            type="date"
-            name="to"
-            defaultValue={sp.to}
-            className="rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
-          />
+          <input type="date" name="from" defaultValue={sp.from} className="input" />
+          <input type="date" name="to" defaultValue={sp.to} className="input" />
           <div className="flex gap-2">
-            <button
-              type="submit"
-              className="flex-1 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700"
-            >
+            <button type="submit" className="btn-primary flex-1">
               ค้นหา
             </button>
-            <a
-              href="/maintenance"
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-            >
+            <a href="/maintenance" className="btn-ghost">
               ล้าง
             </a>
           </div>

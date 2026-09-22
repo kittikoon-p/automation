@@ -27,8 +27,8 @@ export default function AlarmStatusChart({
   ].filter((d) => d.value > 0);
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-semibold text-zinc-700">
+    <div className="glass rounded-2xl p-5">
+      <h3 className="mb-4 text-sm font-semibold text-slate-200">
         สัดส่วนสถานะ Alarm
       </h3>
       <div className="h-64">
@@ -41,7 +41,10 @@ export default function AlarmStatusChart({
               cx="50%"
               cy="50%"
               outerRadius={85}
-              label
+              label={({ name, percent }: { name?: string; percent?: number }) =>
+                `${name ?? ""} ${((percent ?? 0) * 100).toFixed(0)}%`
+              }
+              labelLine={{ stroke: "rgba(148,163,184,0.4)" }}
             >
               {data.map((entry, index) => (
                 <Cell
@@ -50,8 +53,11 @@ export default function AlarmStatusChart({
                 />
               ))}
             </Pie>
-            <Tooltip />
-            <Legend />
+            <Tooltip
+              contentStyle={{ background: "#0b1220", border: "1px solid rgba(148,163,184,0.25)", borderRadius: 12, color: "#e2e8f0" }}
+              itemStyle={{ color: "#e2e8f0" }}
+            />
+            <Legend wrapperStyle={{ color: "#94a3b8", fontSize: 12 }} />
           </PieChart>
         </ResponsiveContainer>
       </div>

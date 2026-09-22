@@ -1,23 +1,33 @@
-export function StatusPill({ value }: { value: string }) {
-  const styles: Record<string, string> = {
-    // machine
-    Running: "bg-emerald-100 text-emerald-700",
-    Stop: "bg-zinc-200 text-zinc-700",
-    Alarm: "bg-red-100 text-red-700",
-    Maintenance: "bg-amber-100 text-amber-700",
-    // alarm
-    Open: "bg-red-100 text-red-700",
-    "In Progress": "bg-amber-100 text-amber-700",
-    Closed: "bg-emerald-100 text-emerald-700",
-    // maintenance
-    Pending: "bg-zinc-200 text-zinc-700",
-    Completed: "bg-emerald-100 text-emerald-700",
-  };
+const DOT: Record<string, string> = {
+  Running: "bg-emerald-400",
+  Stop: "bg-slate-400",
+  Alarm: "bg-red-400",
+  Maintenance: "bg-amber-400",
+  Open: "bg-red-400",
+  "In Progress": "bg-amber-400",
+  Closed: "bg-emerald-400",
+  Pending: "bg-slate-400",
+  Completed: "bg-emerald-400",
+};
 
+const BG: Record<string, string> = {
+  Running: "bg-emerald-500/15 text-emerald-300 border-emerald-400/30",
+  Stop: "bg-slate-500/15 text-slate-300 border-slate-400/30",
+  Alarm: "bg-red-500/15 text-red-300 border-red-400/30",
+  Maintenance: "bg-amber-500/15 text-amber-300 border-amber-400/30",
+  Open: "bg-red-500/15 text-red-300 border-red-400/30",
+  "In Progress": "bg-amber-500/15 text-amber-300 border-amber-400/30",
+  Closed: "bg-emerald-500/15 text-emerald-300 border-emerald-400/30",
+  Pending: "bg-slate-500/15 text-slate-300 border-slate-400/30",
+  Completed: "bg-emerald-500/15 text-emerald-300 border-emerald-400/30",
+};
+
+export function StatusPill({ value }: { value: string }) {
   return (
     <span
-      className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${styles[value] ?? "bg-blue-100 text-blue-700"}`}
+      className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-0.5 text-xs font-semibold ${BG[value] ?? "bg-blue-500/15 text-blue-300 border-blue-400/30"}`}
     >
+      <span className={`inline-block h-1.5 w-1.5 rounded-full ${DOT[value] ?? "bg-blue-400"}`} />
       {value}
     </span>
   );

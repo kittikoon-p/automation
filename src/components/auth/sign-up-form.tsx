@@ -63,11 +63,11 @@ export default function SignUpForm() {
   }
 
   return (
-    <form onSubmit={handleSignUp} className="mt-8 space-y-5">
+    <form onSubmit={handleSignUp} className="relative mt-8 space-y-5">
       <div>
         <label
           htmlFor="full_name"
-          className="mb-1.5 block text-sm font-medium text-zinc-700"
+          className="mb-1.5 block text-sm font-medium text-slate-300"
         >
           ชื่อ-นามสกุล
         </label>
@@ -78,7 +78,7 @@ export default function SignUpForm() {
           required
           value={fullName}
           onChange={(e) => setFullName(e.target.value)}
-          className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          className="input"
           placeholder="สมชาย ใจดี"
         />
       </div>
@@ -86,7 +86,7 @@ export default function SignUpForm() {
       <div>
         <label
           htmlFor="email"
-          className="mb-1.5 block text-sm font-medium text-zinc-700"
+          className="mb-1.5 block text-sm font-medium text-slate-300"
         >
           อีเมล
         </label>
@@ -98,7 +98,7 @@ export default function SignUpForm() {
           autoComplete="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+          className="input"
           placeholder="you@company.com"
         />
       </div>
@@ -107,7 +107,7 @@ export default function SignUpForm() {
         <div>
           <label
             htmlFor="password"
-            className="mb-1.5 block text-sm font-medium text-zinc-700"
+            className="mb-1.5 block text-sm font-medium text-slate-300"
           >
             รหัสผ่าน
           </label>
@@ -120,14 +120,14 @@ export default function SignUpForm() {
             autoComplete="new-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
             placeholder="••••••••"
           />
         </div>
         <div>
           <label
             htmlFor="confirm"
-            className="mb-1.5 block text-sm font-medium text-zinc-700"
+            className="mb-1.5 block text-sm font-medium text-slate-300"
           >
             ยืนยันรหัสผ่าน
           </label>
@@ -140,20 +140,20 @@ export default function SignUpForm() {
             autoComplete="new-password"
             value={confirm}
             onChange={(e) => setConfirm(e.target.value)}
-            className="w-full rounded-lg border border-zinc-300 bg-white px-3.5 py-2.5 text-sm text-zinc-900 outline-none transition placeholder:text-zinc-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
             placeholder="••••••••"
           />
         </div>
       </div>
 
-      <p className="text-xs text-zinc-400">
+      <p className="text-xs text-slate-500">
         ผู้ใช้รายแรกที่สมัครจะได้สิทธิ์เป็น Admin โดยอัตโนมัติ
       </p>
 
       {error && (
         <p
           role="alert"
-          className="rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700"
+          className="rounded-xl border border-red-500/30 bg-red-500/10 px-3.5 py-2.5 text-sm text-red-300"
         >
           {error}
         </p>
@@ -161,7 +161,7 @@ export default function SignUpForm() {
       {success && (
         <p
           role="status"
-          className="rounded-lg border border-green-200 bg-green-50 px-3.5 py-2.5 text-sm text-green-700"
+          className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-3.5 py-2.5 text-sm text-emerald-300"
         >
           {success}
         </p>
@@ -170,7 +170,7 @@ export default function SignUpForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
+        className="btn-primary w-full"
       >
         {loading ? "กำลังสมัครสมาชิก..." : "สมัครสมาชิก"}
       </button>

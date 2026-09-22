@@ -55,19 +55,16 @@ export default function AlarmManager({
   return (
     <>
       <div className="flex items-center justify-between">
-        <p className="text-sm text-zinc-500">ทั้งหมด {alarms.length} รายการ</p>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-        >
+        <p className="text-sm text-slate-400">ทั้งหมด {alarms.length} รายการ</p>
+        <button onClick={openAdd} className="btn-primary">
           <Plus className="h-4 w-4" /> เพิ่มบันทึก Alarm
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
+            <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">เครื่องจักร</th>
                 <th className="px-4 py-3">Alarm Code</th>
@@ -78,34 +75,34 @@ export default function AlarmManager({
                 <th className="px-4 py-3 text-right">จัดการ</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-white/5">
               {alarms.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-zinc-400">
+                  <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
                     ไม่พบบันทึก Alarm
                   </td>
                 </tr>
               )}
               {alarms.map((alarm) => (
-                <tr key={alarm.id} className="hover:bg-zinc-50">
+                <tr key={alarm.id} className="transition hover:bg-white/5">
                   <td className="px-4 py-3">
-                    <span className="font-mono font-semibold text-zinc-900">
+                    <span className="font-mono font-semibold text-white">
                       {alarm.machines?.machine_id ?? "-"}
                     </span>
-                    <span className="block text-xs text-zinc-500">
+                    <span className="block text-xs text-slate-500">
                       {alarm.machines?.name ?? ""}
                     </span>
                   </td>
-                  <td className="px-4 py-3 font-mono text-zinc-800">
+                  <td className="px-4 py-3 font-mono text-slate-200">
                     {alarm.alarm_code}
                   </td>
-                  <td className="max-w-[260px] px-4 py-3 text-zinc-600">
+                  <td className="max-w-[260px] px-4 py-3 text-slate-300">
                     {alarm.alarm_description}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-zinc-600">
+                  <td className="px-4 py-3 whitespace-nowrap text-slate-300">
                     {new Date(alarm.occurred_at).toLocaleString("th-TH")}
                   </td>
-                  <td className="max-w-[200px] px-4 py-3 text-zinc-600">
+                  <td className="max-w-[200px] px-4 py-3 text-slate-300">
                     {alarm.cause || "-"}
                   </td>
                   <td className="px-4 py-3">
@@ -116,7 +113,7 @@ export default function AlarmManager({
                       <button
                         onClick={() => openEdit(alarm)}
                         title="แก้ไข"
-                        className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-blue-50 hover:text-blue-600"
+                        className="icon-btn"
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
@@ -125,7 +122,7 @@ export default function AlarmManager({
                           onClick={() => handleDelete(alarm.id)}
                           disabled={deleting === alarm.id}
                           title="ลบ"
-                          className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                          className="icon-btn icon-btn--danger disabled:opacity-50"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>

@@ -41,7 +41,7 @@ export default function RoleSelect({
       value={value}
       onChange={handleChange}
       disabled={saving}
-      className="rounded-lg border border-zinc-300 px-2 py-1 text-sm outline-none focus:border-blue-500 disabled:opacity-60"
+      className="input w-auto px-2 py-1"
     >
       <option value="admin">Admin</option>
       <option value="technician">Technician</option>

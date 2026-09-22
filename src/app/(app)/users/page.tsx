@@ -27,18 +27,18 @@ export default async function UsersPage() {
   return (
     <div className="space-y-6">
       <header>
-        <h1 className="flex items-center gap-2 text-2xl font-bold text-zinc-900">
-          <ShieldCheck className="h-6 w-6 text-purple-600" /> จัดการผู้ใช้
+        <h1 className="flex items-center gap-2 text-2xl font-bold text-white">
+          <ShieldCheck className="h-6 w-6 text-purple-400" /> จัดการผู้ใช้
         </h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <p className="mt-1 text-sm text-slate-400">
           กำหนดสิทธิ์ (Role) ของผู้ใช้งานระบบ เฉพาะ Admin เท่านั้น
         </p>
       </header>
 
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
+            <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">ชื่อ</th>
                 <th className="px-4 py-3">อีเมล</th>
@@ -46,21 +46,21 @@ export default async function UsersPage() {
                 <th className="px-4 py-3">สิทธิ์ (Role)</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-white/5">
               {rows.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-4 py-10 text-center text-zinc-400">
+                  <td colSpan={4} className="px-4 py-10 text-center text-slate-500">
                     ไม่พบผู้ใช้งาน
                   </td>
                 </tr>
               )}
               {rows.map((p) => (
-                <tr key={p.id} className="hover:bg-zinc-50">
-                  <td className="px-4 py-3 font-medium text-zinc-900">
+                <tr key={p.id} className="transition hover:bg-white/5">
+                  <td className="px-4 py-3 font-medium text-white">
                     {p.full_name || "-"}
                   </td>
-                  <td className="px-4 py-3 text-zinc-600">{p.email || "-"}</td>
-                  <td className="px-4 py-3 whitespace-nowrap text-zinc-600">
+                  <td className="px-4 py-3 text-slate-300">{p.email || "-"}</td>
+                  <td className="px-4 py-3 whitespace-nowrap text-slate-300">
                     {new Date(p.created_at).toLocaleDateString("th-TH")}
                   </td>
                   <td className="px-4 py-3">

@@ -36,8 +36,8 @@ export default function AlarmTrendChart({ alarms }: { alarms: Alarm[] }) {
   }));
 
   return (
-    <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
-      <h3 className="mb-4 text-sm font-semibold text-zinc-700">
+    <div className="glass rounded-2xl p-5">
+      <h3 className="mb-4 text-sm font-semibold text-slate-200">
         จำนวน Alarm ต่อวัน (14 วันล่าสุด)
       </h3>
       <div className="h-64">
@@ -52,14 +52,19 @@ export default function AlarmTrendChart({ alarms }: { alarms: Alarm[] }) {
                 <stop offset="95%" stopColor="#ef4444" stopOpacity={0} />
               </linearGradient>
             </defs>
-            <CartesianGrid strokeDasharray="3 3" stroke="#e4e4e7" vertical={false} />
+            <CartesianGrid strokeDasharray="3 3" stroke="rgba(148,163,184,0.15)" vertical={false} />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 10 }}
+              tick={{ fontSize: 10, fill: "#94a3b8" }}
               tickFormatter={(v: string) => v.slice(5)}
+              axisLine={{ stroke: "rgba(148,163,184,0.2)" }}
+              tickLine={false}
             />
-            <YAxis allowDecimals={false} tick={{ fontSize: 12 }} />
-            <Tooltip />
+            <YAxis allowDecimals={false} tick={{ fontSize: 12, fill: "#94a3b8" }} axisLine={false} tickLine={false} />
+            <Tooltip
+              contentStyle={{ background: "#0b1220", border: "1px solid rgba(148,163,184,0.25)", borderRadius: 12, color: "#e2e8f0" }}
+              itemStyle={{ color: "#e2e8f0" }}
+            />
             <Area
               type="monotone"
               dataKey="count"

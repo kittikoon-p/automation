@@ -57,15 +57,15 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <header>
-        <h1 className="text-2xl font-bold text-zinc-900">Dashboard</h1>
-        <p className="mt-1 text-sm text-zinc-500">
+        <h1 className="text-2xl font-bold text-white">Dashboard</h1>
+        <p className="mt-1 text-sm text-slate-400">
           ภาพรวมสถานะเครื่องจักร Alarm และงานบำรุงรักษา
         </p>
       </header>
 
       {/* Machine stats */}
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           เครื่องจักร
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
@@ -73,38 +73,38 @@ export default async function DashboardPage() {
             icon={Cpu}
             label="เครื่องจักรทั้งหมด"
             value={totalMachines}
-            accent="bg-blue-50 text-blue-600"
+            accent="bg-blue-500/20 text-blue-300"
           />
           <StatCard
             icon={PlayCircle}
             label="Running"
             value={running}
-            accent="bg-emerald-50 text-emerald-600"
+            accent="bg-emerald-500/20 text-emerald-300"
           />
           <StatCard
             icon={PauseCircle}
             label="Stop"
             value={stop}
-            accent="bg-zinc-100 text-zinc-600"
+            accent="bg-slate-500/20 text-slate-300"
           />
           <StatCard
             icon={AlertTriangle}
             label="Alarm"
             value={alerting}
-            accent="bg-red-50 text-red-600"
+            accent="bg-red-500/20 text-red-300"
           />
           <StatCard
             icon={Wrench}
             label="Maintenance"
             value={maintaining}
-            accent="bg-amber-50 text-amber-600"
+            accent="bg-amber-500/20 text-amber-300"
           />
         </div>
       </section>
 
       {/* Workload overview */}
       <section>
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-zinc-500">
+        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-slate-500">
           งานที่ต้องติดตาม
         </h2>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -112,25 +112,25 @@ export default async function DashboardPage() {
             icon={AlertTriangle}
             label="Alarm ทั้งหมด"
             value={alarms.length}
-            accent="bg-red-50 text-red-600"
+            accent="bg-red-500/20 text-red-300"
           />
           <StatCard
             icon={Activity}
             label="Alarm เปิดค้าง (Open)"
             value={openAlarms}
-            accent="bg-orange-50 text-orange-600"
+            accent="bg-orange-500/20 text-orange-300"
           />
           <StatCard
             icon={Hammer}
             label="งานบำรุงรักษา"
             value={maintenance.length}
-            accent="bg-amber-50 text-amber-600"
+            accent="bg-amber-500/20 text-amber-300"
           />
           <StatCard
             icon={Cog}
             label="งานรอแก้ไข (Pending)"
             value={pendingMaint}
-            accent="bg-purple-50 text-purple-600"
+            accent="bg-purple-500/20 text-purple-300"
           />
         </div>
       </section>
@@ -153,32 +153,32 @@ export default async function DashboardPage() {
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <AlarmTrendChart alarms={alarms} />
         {/* Status summary table */}
-        <div className="rounded-2xl border border-zinc-200 bg-white p-5 shadow-sm">
-          <h3 className="mb-3 text-sm font-semibold text-zinc-700">
+        <div className="glass rounded-2xl p-5">
+          <h3 className="mb-3 text-sm font-semibold text-slate-200">
             สรุปสถานะงาน Maintenance
           </h3>
           <ul className="space-y-2 text-sm">
-            <li className="flex items-center justify-between rounded-lg bg-zinc-50 px-3 py-2">
-              <span className="text-zinc-600">Pending</span>
+            <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+              <span className="text-slate-400">Pending</span>
               <StatusPill value="Pending"  />
-              <span className="font-semibold text-zinc-900">{pendingMaint}</span>
+              <span className="font-semibold text-white">{pendingMaint}</span>
             </li>
-            <li className="flex items-center justify-between rounded-lg bg-zinc-50 px-3 py-2">
-              <span className="text-zinc-600">In Progress</span>
+            <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+              <span className="text-slate-400">In Progress</span>
               <StatusPill value="In Progress"  />
-              <span className="font-semibold text-zinc-900">
+              <span className="font-semibold text-white">
                 {inProgressMaint}
               </span>
             </li>
-            <li className="flex items-center justify-between rounded-lg bg-zinc-50 px-3 py-2">
-              <span className="text-zinc-600">Completed</span>
+            <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+              <span className="text-slate-400">Completed</span>
               <StatusPill value="Completed"  />
-              <span className="font-semibold text-zinc-900">
+              <span className="font-semibold text-white">
                 {completedMaint}
               </span>
             </li>
           </ul>
-          <p className="mt-4 flex items-center gap-2 text-xs text-zinc-400">
+          <p className="mt-4 flex items-center gap-2 text-xs text-slate-500">
             <XCircle className="h-3.5 w-3.5" /> ข้อมูลอัปเดตตามฐานข้อมูลโดยตรง
           </p>
         </div>

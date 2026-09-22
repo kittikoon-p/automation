@@ -137,13 +137,13 @@ export default function MaintenanceFormModal({
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               เครื่องจักร *
             </label>
             <select
               value={form.machine_id}
               onChange={set("machine_id")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             >
               <option value="">-- เลือกเครื่องจักร --</option>
               {machines.map((m) => (
@@ -154,13 +154,13 @@ export default function MaintenanceFormModal({
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               ประเภทงานบำรุงรักษา *
             </label>
             <select
               value={form.maintenance_type}
               onChange={set("maintenance_type")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             >
               <option value="">-- เลือกประเภท --</option>
               {[
@@ -181,35 +181,35 @@ export default function MaintenanceFormModal({
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               ช่างผู้รับผิดชอบ (Technician)
             </label>
             <input
               value={form.technician}
               onChange={set("technician")}
               placeholder="สมชาย ใจดี"
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               วันที่ *
             </label>
             <input
               type="date"
               value={form.maintenance_date}
               onChange={set("maintenance_date")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-zinc-700">
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               สถานะ *
             </label>
             <select
               value={form.status}
               onChange={set("status")}
-              className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="input"
             >
               {MAINTENANCE_STATUSES.map((s) => (
                 <option key={s} value={s}>
@@ -221,7 +221,7 @@ export default function MaintenanceFormModal({
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             ปัญหา (Problem) *
           </label>
           <textarea
@@ -229,12 +229,12 @@ export default function MaintenanceFormModal({
             onChange={set("problem")}
             rows={2}
             placeholder="อธิบายปัญหาที่พบ"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           />
         </div>
 
         <div>
-          <label className="mb-1 block text-sm font-medium text-zinc-700">
+          <label className="mb-1 block text-sm font-medium text-slate-300">
             การดำเนินการ (Action Taken) *
           </label>
           <textarea
@@ -242,35 +242,31 @@ export default function MaintenanceFormModal({
             onChange={set("action_taken")}
             rows={2}
             placeholder="อธิบายขั้นตอนการแก้ไขที่ดำเนินการ"
-            className="w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+            className="input"
           />
         </div>
 
         {errors.length > 0 && (
-          <ul className="space-y-1 rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <ul className="space-y-1 rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {errors.map((err) => (
               <li key={err}>• {err}</li>
             ))}
           </ul>
         )}
         {serverError && (
-          <p className="rounded-lg border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+          <p className="rounded-xl border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-300">
             {serverError}
           </p>
         )}
 
         <div className="flex justify-end gap-3 pt-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="rounded-lg border border-zinc-300 px-4 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
-          >
+          <button type="button" onClick={onClose} className="btn-ghost">
             ยกเลิก
           </button>
           <button
             type="submit"
             disabled={loading}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-blue-700 disabled:opacity-60"
+            className="btn-primary disabled:opacity-60"
           >
             {loading ? "บันทึก..." : "บันทึก"}
           </button>

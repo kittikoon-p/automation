@@ -60,19 +60,16 @@ export default function MaintenanceManager({
   return (
     <>
       <div className="flex items-center justify-between">
-        <p className="text-sm text-zinc-500">ทั้งหมด {records.length} รายการ</p>
-        <button
-          onClick={openAdd}
-          className="flex items-center gap-2 rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-blue-700"
-        >
+        <p className="text-sm text-slate-400">ทั้งหมด {records.length} รายการ</p>
+        <button onClick={openAdd} className="btn-primary">
           <Plus className="h-4 w-4" /> เพิ่มงานบำรุงรักษา
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white shadow-sm">
+      <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
+            <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">เครื่องจักร</th>
                 <th className="px-4 py-3">ประเภท</th>
@@ -84,35 +81,35 @@ export default function MaintenanceManager({
                 <th className="px-4 py-3 text-right">จัดการ</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-zinc-100">
+            <tbody className="divide-y divide-white/5">
               {records.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-zinc-400">
+                  <td colSpan={8} className="px-4 py-10 text-center text-slate-500">
                     ไม่พบงานบำรุงรักษา
                   </td>
                 </tr>
               )}
               {records.map((r) => (
-                <tr key={r.id} className="hover:bg-zinc-50">
+                <tr key={r.id} className="transition hover:bg-white/5">
                   <td className="px-4 py-3">
-                    <span className="font-mono font-semibold text-zinc-900">
+                    <span className="font-mono font-semibold text-white">
                       {r.machines?.machine_id ?? "-"}
                     </span>
-                    <span className="block text-xs text-zinc-500">
+                    <span className="block text-xs text-slate-500">
                       {r.machines?.name ?? ""}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">{r.maintenance_type}</td>
-                  <td className="max-w-[220px] px-4 py-3 text-zinc-600">
+                  <td className="px-4 py-3 text-slate-200">{r.maintenance_type}</td>
+                  <td className="max-w-[220px] px-4 py-3 text-slate-300">
                     {r.problem}
                   </td>
-                  <td className="max-w-[220px] px-4 py-3 text-zinc-600">
+                  <td className="max-w-[220px] px-4 py-3 text-slate-300">
                     {r.action_taken}
                   </td>
-                  <td className="px-4 py-3 text-zinc-700">
+                  <td className="px-4 py-3 text-slate-200">
                     {r.technician || "-"}
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-zinc-600">
+                  <td className="px-4 py-3 whitespace-nowrap text-slate-300">
                     {new Date(r.maintenance_date + "T00:00:00").toLocaleDateString(
                       "th-TH"
                     )}
@@ -125,7 +122,7 @@ export default function MaintenanceManager({
                       <button
                         onClick={() => openEdit(r)}
                         title="แก้ไข"
-                        className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-blue-50 hover:text-blue-600"
+                        className="icon-btn"
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
@@ -134,7 +131,7 @@ export default function MaintenanceManager({
                           onClick={() => handleDelete(r.id)}
                           disabled={deleting === r.id}
                           title="ลบ"
-                          className="rounded-lg p-1.5 text-zinc-500 transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50"
+                          className="icon-btn icon-btn--danger disabled:opacity-50"
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
