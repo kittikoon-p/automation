@@ -45,6 +45,7 @@ export default function RoleSelect({
     >
       <option value="admin">Admin</option>
       <option value="technician">Technician</option>
+      <option value="viewer">Viewer</option>
     </select>
   );
 }

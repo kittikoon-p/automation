@@ -1,5 +1,10 @@
-export const ROLES = ["admin", "technician"] as const;
+export const ROLES = ["admin", "technician", "viewer"] as const;
 export type UserRole = (typeof ROLES)[number];
+
+/** Writer roles can create/update alarms & maintenance; viewer is read-only. */
+export function canWrite(role: UserRole): boolean {
+  return role === "admin" || role === "technician";
+}
 
 export interface Profile {
   id: string;
@@ -70,3 +75,36 @@ export const MAINTENANCE_STATUSES = [
   "Completed",
 ] as const;
 export type MaintenanceStatus = (typeof MAINTENANCE_STATUSES)[number];
+
+export interface MachineHistoryRow {
+  id: string;
+  machine_id: string;
+  old_status: MachineStatus | null;
+  new_status: MachineStatus;
+  changed_by_name: string | null;
+  created_at: string;
+  machines?: Pick<Machine, "machine_id" | "name"> | null;
+}
+
+export interface AuditLogRow {
+  id: string;
+  user_id: string | null;
+  user_name: string | null;
+  table_name: string;
+  record_id: string | null;
+  action: string;
+  details: Record<string, unknown> | null;
+  created_at: string;
+}
+
+export type NotificationType = "info" | "alarm" | "machine" | "maintenance";
+
+export interface NotificationRow {
+  id: string;
+  user_id: string;
+  type: NotificationType;
+  title: string;
+  message: string;
+  read_at: string | null;
+  created_at: string;
+}

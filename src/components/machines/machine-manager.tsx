@@ -4,19 +4,21 @@ import { useState } from "react";
 
 import { Pencil, Plus, Trash2 } from "lucide-react";
 
+import ExportButtons from "@/components/ui/export-buttons";
 import MachineFormModal from "@/components/machines/machine-form-modal";
 import { StatusPill } from "@/components/ui/status-pill";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import type { Machine } from "@/lib/db/types";
+import type { Machine, UserRole } from "@/lib/db/types";
 
 export default function MachineManager({
   machines,
-  isAdmin,
+  role,
 }: {
   machines: Machine[];
-  isAdmin: boolean;
+  role: UserRole;
 }) {
+  const isAdmin = role === "admin";
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Machine | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -47,20 +49,43 @@ export default function MachineManager({
     router.refresh();
   }
 
+  const exportRows = machines.map((m) => ({
+    machine_id: m.machine_id,
+    name: m.name,
+    type: m.type,
+    location: m.location,
+    status: m.status,
+    created_at: new Date(m.created_at).toLocaleString("th-TH"),
+  }));
+
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-slate-400">ทั้งหมด {machines.length} เครื่อง</p>
-        {isAdmin && (
-          <button onClick={openAdd} className="btn-primary">
-            <Plus className="h-4 w-4" /> เพิ่มเครื่องจักร
-          </button>
-        )}
+        <div className="flex items-center gap-2">
+          <ExportButtons
+            rows={exportRows}
+            columns={[
+              { key: "machine_id", label: "Machine ID" },
+              { key: "name", label: "ชื่อ" },
+              { key: "type", label: "ประเภท" },
+              { key: "location", label: "ตำแหน่ง" },
+              { key: "status", label: "สถานะ" },
+              { key: "created_at", label: "วันที่เพิ่ม" },
+            ]}
+            filename="machines"
+          />
+          {isAdmin && (
+            <button onClick={openAdd} className="btn-primary">
+              <Plus className="h-4 w-4" /> เพิ่มเครื่องจักร
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[640px] text-left text-sm">
             <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">Machine ID</th>

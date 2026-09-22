@@ -6,9 +6,10 @@ import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import AlarmFormModal from "@/components/alarms/alarm-form-modal";
+import ExportButtons from "@/components/ui/export-buttons";
 import { StatusPill } from "@/components/ui/status-pill";
 import { createClient } from "@/lib/supabase/client";
-import type { Alarm } from "@/lib/db/types";
+import { canWrite, type Alarm, type UserRole } from "@/lib/db/types";
 
 interface MachineOption {
   id: string;
@@ -19,12 +20,14 @@ interface MachineOption {
 export default function AlarmManager({
   alarms,
   machines,
-  isAdmin,
+  role,
 }: {
   alarms: Alarm[];
   machines: MachineOption[];
-  isAdmin: boolean;
+  role: UserRole;
 }) {
+  const isAdmin = role === "admin";
+  const writer = canWrite(role);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Alarm | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -52,18 +55,45 @@ export default function AlarmManager({
     router.refresh();
   }
 
+  const exportRows = alarms.map((a) => ({
+    machine_id: a.machines?.machine_id ?? "",
+    name: a.machines?.name ?? "",
+    alarm_code: a.alarm_code,
+    alarm_description: a.alarm_description,
+    occurred_at: new Date(a.occurred_at).toLocaleString("th-TH"),
+    cause: a.cause ?? "",
+    status: a.status,
+  }));
+
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-slate-400">ทั้งหมด {alarms.length} รายการ</p>
-        <button onClick={openAdd} className="btn-primary">
-          <Plus className="h-4 w-4" /> เพิ่มบันทึก Alarm
-        </button>
+        <div className="flex items-center gap-2">
+          <ExportButtons
+            rows={exportRows}
+            columns={[
+              { key: "machine_id", label: "Machine ID" },
+              { key: "name", label: "เครื่องจักร" },
+              { key: "alarm_code", label: "Alarm Code" },
+              { key: "alarm_description", label: "Description" },
+              { key: "occurred_at", label: "Date / Time" },
+              { key: "cause", label: "Cause" },
+              { key: "status", label: "สถานะ" },
+            ]}
+            filename="alarms"
+          />
+          {writer && (
+            <button onClick={openAdd} className="btn-primary">
+              <Plus className="h-4 w-4" /> เพิ่มบันทึก Alarm
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">เครื่องจักร</th>
@@ -72,13 +102,16 @@ export default function AlarmManager({
                 <th className="px-4 py-3">Date / Time</th>
                 <th className="px-4 py-3">Cause</th>
                 <th className="px-4 py-3">สถานะ</th>
-                <th className="px-4 py-3 text-right">จัดการ</th>
+                {writer && <th className="px-4 py-3 text-right">จัดการ</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {alarms.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-10 text-center text-slate-500">
+                  <td
+                    colSpan={writer ? 7 : 6}
+                    className="px-4 py-10 text-center text-slate-500"
+                  >
                     ไม่พบบันทึก Alarm
                   </td>
                 </tr>
@@ -108,27 +141,29 @@ export default function AlarmManager({
                   <td className="px-4 py-3">
                     <StatusPill value={alarm.status} />
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        onClick={() => openEdit(alarm)}
-                        title="แก้ไข"
-                        className="icon-btn"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      {isAdmin && (
+                  {writer && (
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-1">
                         <button
-                          onClick={() => handleDelete(alarm.id)}
-                          disabled={deleting === alarm.id}
-                          title="ลบ"
-                          className="icon-btn icon-btn--danger disabled:opacity-50"
+                          onClick={() => openEdit(alarm)}
+                          title="แก้ไข"
+                          className="icon-btn"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </button>
-                      )}
-                    </div>
-                  </td>
+                        {isAdmin && (
+                          <button
+                            onClick={() => handleDelete(alarm.id)}
+                            disabled={deleting === alarm.id}
+                            title="ลบ"
+                            className="icon-btn icon-btn--danger disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

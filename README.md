@@ -10,7 +10,7 @@
 - พัฒนา Web Application สำหรับบันทึกและติดตามข้อมูลเครื่องจักร (Machine Master)
 - บันทึกเหตุการณ์ Alarm และงานบำรุงรักษา (Maintenance) ของเครื่องจักรในโรงงาน
 - แสดงสถานะภาพรวมของเครื่องจักรผ่าน Dashboard แบบ Realtime กับฐานข้อมูล
-- กำหนดสิทธิ์การเข้าถึงตาม Role (Admin / Technician) ด้วย Row Level Security ของ Supabase
+- กำหนดสิทธิ์การเข้าถึงตาม Role (Admin / Technician / Viewer) ด้วย Row Level Security ของ Supabase
 - ใช้ AI เป็นตัวช่วยในการวิเคราะห์ ออกแบบ พัฒนา ทดสอบ และปรับปรุงโปรแกรมตลอดกระบวนการพัฒนา
 
 ## 2. Function หลัก (Main Features)
@@ -18,13 +18,19 @@
 | ฟังก์ชัน | รายละเอียด |
 |---|---|
 | Authentication | Login / Logout / สมัครสมาชิกด้วย Supabase Auth (email/password) |
-| Role & Permission | Admin และ Technician ควบคุมด้วย RLS + ตรวจสอบ Role ในทุกหน้า |
+| Role & Permission | Admin / Technician / Viewer ควบคุมด้วย RLS + ตรวจสอบ Role ในทุกหน้า (Viewer = อ่านอย่างเดียว) |
 | Dashboard | จำนวนเครื่องจักรทั้งหมด, Running / Stop / Alarm / Maintenance, จำนวน Alarm, จำนวนงาน Maintenance พร้อมกราฟแท่ง/วงกลม/แนวโน้ม |
+| Alarm Analysis | วิเคราะห์ Alarm: Close Rate, Alarm เฉลี่ยต่อวัน, เครื่องจักรที่ Alarm บ่อยที่สุด, กราฟจำนวน Alarm แยกตามเครื่องจักร |
 | Machine Master | เพิ่ม / แก้ไข / ลบ / แสดง เครื่องจักร (Machine ID, Name, Type, Location, Status) |
 | Alarm Record | เพิ่ม / แก้ไข / ลบ / แสดง Alarm (Machine, Code, Description, Date/Time, Cause, Status) |
 | Maintenance Record | เพิ่ม / แก้ไข / ลบ / แสดง งานบำรุงรักษา (Machine, Type, Problem, Action, Technician, Date, Status) |
-| Search & Filter | ค้นหา/กรองตาม Machine ID, ชื่อ, Status, Type, Alarm Code, ช่วงวันที่ ฯลฯ |
+| Machine History | บันทึกประวัติการเปลี่ยนสถานะเครื่องจักรอัตโนมัติ (เดิม → ใหม่, ผู้ดำเนินการ, วันเวลา) |
+| Audit Log | บันทึกทุกการ INSERT / UPDATE / DELETE บนข้อมูลทั้งหมด (ดูได้เฉพาะ Admin) |
+| Notification | การแจ้งเตือนอัตโนมัติ (Alarm ใหม่, เครื่องจักรเข้า Alarm, งานบำรุงรักษาใหม่) พร้อมป้ายนับที่ไม่ได้อ่าน |
+| Search & Filter | ค้นหา/กรองขั้นสูงตาม Machine ID, ชื่อ, Status, Type, Location, Alarm Code/Cause, ประเภทงาน, ช่วงวันที่ ฯลฯ |
+| Export | ดาวน์โหลดข้อมูลเป็น CSV และ Excel (.xls) จากหน้าแสดงข้อมูล |
 | Input Validation | Zod validation ทุกฟอร์ม + เช็ค Machine ID ซ้ำ + แสดงข้อความแจ้งเตือน |
+| UI | ธีมมืด (Dark Mode) สไตล์ Industrial Control Room + Responsive บนมือถือ (Mobile Drawer Menu) |
 
 ### สถานะของแต่ละ Entity
 - **เครื่องจักร**: `Running` / `Stop` / `Alarm` / `Maintenance`
@@ -46,14 +52,14 @@
 
 ## 4. Database Structure
 
-ฐานข้อมูล Supabase PostgreSQL ประกอบด้วย 4 ตารางหลัก พร้อม FK, enum, index, RLS และ trigger ดูโค้ดเต็มได้ที่ `supabase/schema.sql`
+ฐานข้อมูล Supabase PostgreSQL ประกอบด้วย 7 ตารางหลัก พร้อม FK, enum, index, RLS และ trigger ดูโค้ดเต็มได้ที่ `supabase/schema.sql`
 
 ```
 ┌─────────────────┐      ┌──────────────────────────┐
 │   auth.users    │      │       profiles            │
 │  (จาก Supabase) │◄────►│ id (PK -> auth.users.id)  │
 └─────────────────┘      │ full_name, email          │
-                         │ role: admin|technician    │
+                         │ role: admin|technician|viewer
                          └────────────┬──────────────┘
                                       │ created_by
 ┌─────────────────────┐  ┌────────────┴──────────────────┐
@@ -62,28 +68,37 @@
 │ machine_id (UNIQUE) │  │ alarm_code, alarm_description │
 │ name, type, location│  │ occurred_at, cause            │
 │ status (enum)       │  │ status: Open|In Progress|Closed│
-└─────────────────────┘  └───────────────────────────────┘
-        ▲
+└───────┬─────────────┘  └───────────────────────────────┘
         │ machine_id (FK)
         │
-┌───────────────────────────┐
-│    maintenance_records     │
-│ maintenance_type, problem  │
-│ action_taken, technician   │
-│ maintenance_date, status   │
-└───────────────────────────┘
+┌───────┴──────────────────┐   ┌──────────────────────────┐
+│    maintenance_records    │   │    machine_history        │
+│ maintenance_type, problem │   │ old_status, new_status    │
+│ action_taken, technician  │   │ changed_by_name, created_at│
+│ maintenance_date, status  │   │ (เขียนอัตโนมัติจาก Trigger)│
+└───────────────────────────┘   └──────────────────────────┘
+
+┌──────────────────────────┐   ┌──────────────────────────┐
+│      audit_logs           │   │      notifications        │
+│ table_name, record_id     │   │ user_id, type, title      │
+│ action (I/U/D), details   │   │ message, read_at          │
+│ (เขียนอัตโนมัติจาก Trigger)│   │ (fan-out อัตโนมัติ)        │
+└──────────────────────────┘   └──────────────────────────┘
 ```
 
 **ความสัมพันธ์ (Relationships)**
 - `profiles.id → auth.users.id` (1:1) บันทึก Role ของผู้ใช้
 - `alarms.machine_id → machines.id` (N:1)
 - `maintenance_records.machine_id → machines.id` (N:1)
+- `machine_history.machine_id → machines.id` (N:1) บันทึกอัตโนมัติเมื่อสถานะเปลี่ยน
+- `notifications.user_id → auth.users.id` สร้างอัตโนมัติทุกครั้งที่มี Alarm ใหม่ / เครื่องจักรเข้า Alarm / งานบำรุงรักษาใหม่
 - `created_by → profiles.id` ใช้บันทึกผู้สร้างข้อมูล
 
 **Row Level Security (RLS)**
-- ผู้ใช้ใดก็ตามที่ Login แล้ว: อ่าน machines / alarms / maintenance ได้
-- **Admin**: เพิ่ม/แก้ไข/ลบ machines และลบ alarms/maintenance ได้ และจัดการ Role ผู้ใช้ได้
+- ผู้ใช้ใดก็ตามที่ Login แล้ว: อ่าน machines / alarms / maintenance / machine_history ได้
+- **Admin**: เพิ่ม/แก้ไข/ลบ machines และลบ alarms/maintenance ได้ อ่าน Audit Log ได้ และจัดการ Role ผู้ใช้ได้
 - **Technician**: เพิ่ม/แก้ไขบันทึก alarm และ maintenance ได้ (เปลี่ยนสถานะได้) แต่ควบคุมเครื่องจักรไม่ได้
+- **Viewer**: อ่านข้อมูลได้เท่านั้น ไม่สามารถเพิ่ม/แก้ไข/ลบได้ทุกตาราง
 
 ## 5. วิธีติดตั้ง / ใช้งาน (Installation)
 
@@ -181,11 +196,14 @@ npm test           # vitest unit tests
 ├── src/
 │   ├── app/
 │   │   ├── (app)/                # กลุ่มหน้าหลัง Login
-│   │   │   ├── layout.tsx        # Protected layout + Sidebar
-│   │   │   ├── dashboard/        # Dashboard + กราฟ
-│   │   │   ├── machines/         # Machine Master (CRUD + filter)
-│   │   │   ├── alarms/           # Alarm Record (CRUD + filter)
-│   │   │   ├── maintenance/      # Maintenance Record (CRUD + filter)
+│   │   │   ├── layout.tsx        # Protected layout + Sidebar (responsive)
+│   │   │   ├── dashboard/        # Dashboard + กราฟ + วิเคราะห์ Alarm
+│   │   │   ├── machines/         # Machine Master (CRUD + filter ขั้นสูง + export)
+│   │   │   ├── alarms/           # Alarm Record (CRUD + filter + export)
+│   │   │   ├── maintenance/      # Maintenance Record (CRUD + filter + export)
+│   │   │   ├── machine-history/  # ประวัติการเปลี่ยนสถานะเครื่องจักร
+│   │   │   ├── notifications/    # การแจ้งเตือน
+│   │   │   ├── audit-log/        # Audit Log (Admin)
 │   │   │   └── users/            # จัดการผู้ใช้ (Admin only)
 │   │   ├── login/                # หน้า Login
 │   │   ├── signup/               # หน้าสมัครสมาชิก

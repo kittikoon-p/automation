@@ -1,7 +1,11 @@
 import { Search } from "lucide-react";
 
 import MaintenanceManager from "@/components/maintenance/maintenance-manager";
-import { fetchMachineOptions, fetchMaintenanceRecords } from "@/lib/db/data";
+import {
+  fetchMachineOptions,
+  fetchMaintenanceRecords,
+  fetchMaintenanceTypes,
+} from "@/lib/db/data";
 import { requireUser } from "@/lib/db/guard";
 import { MAINTENANCE_STATUSES } from "@/lib/db/types";
 
@@ -19,18 +23,19 @@ export default async function MaintenancePage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const user = await requireUser();
-  const isAdmin = user.role === "admin";
 
   const sp = await searchParams;
-  const [records, machines] = await Promise.all([
+  const [records, machines, maintTypes] = await Promise.all([
     fetchMaintenanceRecords({
       search: getParam(sp, "search"),
       status: getParam(sp, "status"),
       machineId: getParam(sp, "machineId"),
+      type: getParam(sp, "type"),
       from: getParam(sp, "from"),
       to: getParam(sp, "to"),
     }),
     fetchMachineOptions(),
+    fetchMaintenanceTypes(),
   ]);
 
   return (
@@ -42,9 +47,9 @@ export default async function MaintenancePage({
         </p>
       </header>
 
-      {/* Search & Filter */}
+      {/* Search & Filter (Advanced) */}
       <form method="get" className="glass rounded-2xl p-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-7">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-8">
           <div className="relative xl:col-span-2">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <input
@@ -59,6 +64,14 @@ export default async function MaintenancePage({
             {MAINTENANCE_STATUSES.map((s) => (
               <option key={s} value={s}>
                 {s}
+              </option>
+            ))}
+          </select>
+          <select name="type" defaultValue={sp.type} className="input">
+            <option value="">ประเภทงานทั้งหมด</option>
+            {maintTypes.map((t) => (
+              <option key={t} value={t}>
+                {t}
               </option>
             ))}
           </select>
@@ -86,7 +99,7 @@ export default async function MaintenancePage({
       <MaintenanceManager
         records={records}
         machines={machines}
-        isAdmin={isAdmin}
+        role={user.role}
         currentUserName={user.full_name}
       />
     </div>

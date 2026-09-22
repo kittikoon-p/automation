@@ -1,20 +1,24 @@
 import {
   Activity,
   AlertTriangle,
+  BarChart3,
   Cog,
   Cpu,
+  Gauge,
   Hammer,
   PauseCircle,
   PlayCircle,
+  TrendingUp,
   Wrench,
   XCircle,
 } from "lucide-react";
 
-import StatCard from "@/components/ui/stat-card";
-import { StatusPill } from "@/components/ui/status-pill";
-import MachineStatusChart from "@/components/dashboard/machine-status-chart";
+import AlarmByMachineChart from "@/components/dashboard/alarm-by-machine-chart";
 import AlarmStatusChart from "@/components/dashboard/alarm-status-chart";
 import AlarmTrendChart from "@/components/dashboard/alarm-trend-chart";
+import MachineStatusChart from "@/components/dashboard/machine-status-chart";
+import StatCard from "@/components/ui/stat-card";
+import { StatusPill } from "@/components/ui/status-pill";
 import { createClient } from "@/lib/supabase/server";
 import { requireUser } from "@/lib/db/guard";
 
@@ -22,15 +26,17 @@ export default async function DashboardPage() {
   await requireUser();
   const supabase = await createClient();
 
-  const [machinesRes, alarmsRes, maintRes] = await Promise.all([
+  const [machinesRes, alarmsRes, maintRes, alarmMachinesRes] = await Promise.all([
     supabase.from("machines").select("status"),
     supabase.from("alarms").select("status, occurred_at"),
     supabase.from("maintenance_records").select("status"),
+    supabase.from("alarms").select("machine_id, machines(machine_id, name)"),
   ]);
 
   const machines = machinesRes.data ?? [];
   const alarms = alarmsRes.data ?? [];
   const maintenance = maintRes.data ?? [];
+  const alarmMachines = alarmMachinesRes.data ?? [];
 
   const totalMachines = machines.length;
   const running = machines.filter((m) => m.status === "Running").length;
@@ -54,12 +60,39 @@ export default async function DashboardPage() {
     (m) => m.status === "Completed"
   ).length;
 
+  // Alarm analysis
+  const closeRate =
+    alarms.length > 0 ? Math.round((closedAlarms / alarms.length) * 100) : 0;
+  const avgPerDay =
+    alarms.length > 0 ? (alarms.length / 14).toFixed(1) : "0";
+  const perMachine = new Map<
+    string,
+    { name: string; count: number }
+  >();
+  for (const a of alarmMachines as unknown as {
+    machine_id?: string;
+    machines?: { machine_id?: string; name?: string } | null;
+  }[]) {
+    const label = a.machines?.machine_id ?? a.machine_id ?? "ไม่ทราบเครื่อง";
+    const entry = perMachine.get(label) ?? {
+      name: a.machines?.name ?? label,
+      count: 0,
+    };
+    entry.count += 1;
+    perMachine.set(label, entry);
+  }
+  const topMachines = Array.from(perMachine.entries())
+    .map(([key, v]) => ({ name: v.name || key, count: v.count }))
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8);
+  const topMachine = topMachines[0];
+
   return (
     <div className="space-y-8">
       <header>
         <h1 className="text-2xl font-bold text-white">Dashboard</h1>
         <p className="mt-1 text-sm text-slate-400">
-          ภาพรวมสถานะเครื่องจักร Alarm และงานบำรุงรักษา
+          ภาพรวมสถานะเครื่องจักร Alarm งานบำรุงรักษา และการวิเคราะห์
         </p>
       </header>
 
@@ -150,8 +183,38 @@ export default async function DashboardPage() {
         />
       </section>
 
+      {/* Alarm analysis */}
+      <section>
+        <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-slate-500">
+          <BarChart3 className="h-4 w-4" /> วิเคราะห์ Alarm
+        </h2>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <StatCard
+            icon={Gauge}
+            label="อัตราการปิด Alarm (Close Rate)"
+            value={`${closeRate}%`}
+            accent="bg-emerald-500/20 text-emerald-300"
+          />
+          <StatCard
+            icon={TrendingUp}
+            label="Alarm เฉลี่ยต่อวัน (14 วัน)"
+            value={avgPerDay}
+            accent="bg-cyan-500/20 text-cyan-300"
+          />
+          <StatCard
+            icon={Cpu}
+            label="เครื่องจักรที่ Alarm บ่อยที่สุด"
+            value={topMachine ? `${topMachine.name} (${topMachine.count})` : "—"}
+            accent="bg-red-500/20 text-red-300"
+          />
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <AlarmByMachineChart data={topMachines} />
+          <AlarmTrendChart alarms={alarms} />
+        </div>
+      </section>
+
       <section className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <AlarmTrendChart alarms={alarms} />
         {/* Status summary table */}
         <div className="glass rounded-2xl p-5">
           <h3 className="mb-3 text-sm font-semibold text-slate-200">
@@ -160,19 +223,19 @@ export default async function DashboardPage() {
           <ul className="space-y-2 text-sm">
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
               <span className="text-slate-400">Pending</span>
-              <StatusPill value="Pending"  />
+              <StatusPill value="Pending" />
               <span className="font-semibold text-white">{pendingMaint}</span>
             </li>
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
               <span className="text-slate-400">In Progress</span>
-              <StatusPill value="In Progress"  />
+              <StatusPill value="In Progress" />
               <span className="font-semibold text-white">
                 {inProgressMaint}
               </span>
             </li>
             <li className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
               <span className="text-slate-400">Completed</span>
-              <StatusPill value="Completed"  />
+              <StatusPill value="Completed" />
               <span className="font-semibold text-white">
                 {completedMaint}
               </span>

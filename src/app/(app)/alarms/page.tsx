@@ -19,7 +19,6 @@ export default async function AlarmsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const user = await requireUser();
-  const isAdmin = user.role === "admin";
 
   const sp = await searchParams;
   const [alarms, machines] = await Promise.all([
@@ -83,7 +82,7 @@ export default async function AlarmsPage({
         </div>
       </form>
 
-      <AlarmManager alarms={alarms} machines={machines} isAdmin={isAdmin} />
+      <AlarmManager alarms={alarms} machines={machines} role={user.role} />
     </div>
   );
 }

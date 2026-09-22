@@ -19,13 +19,13 @@ export default async function MachinesPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const user = await requireUser();
-  const isAdmin = user.role === "admin";
 
   const sp = await searchParams;
   const { machines, types } = await fetchMachines({
     search: getParam(sp, "search"),
     status: getParam(sp, "status"),
     type: getParam(sp, "type"),
+    location: getParam(sp, "location"),
   });
 
   return (
@@ -39,10 +39,10 @@ export default async function MachinesPage({
         </p>
       </header>
 
-      {/* Search & Filter */}
+      {/* Search & Filter (Advanced) */}
       <form method="get" className="glass rounded-2xl p-4">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-5">
-          <div className="relative lg:col-span-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+          <div className="relative xl:col-span-2">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-slate-500" />
             <input
               name="search"
@@ -67,6 +67,12 @@ export default async function MachinesPage({
               </option>
             ))}
           </select>
+          <input
+            name="location"
+            defaultValue={sp.location}
+            placeholder="ตำแหน่ง (Location)..."
+            className="input"
+          />
           <div className="flex gap-2">
             <button type="submit" className="btn-primary flex-1">
               ค้นหา
@@ -78,7 +84,7 @@ export default async function MachinesPage({
         </div>
       </form>
 
-      <MachineManager machines={machines} isAdmin={isAdmin} />
+      <MachineManager machines={machines} role={user.role} />
     </div>
   );
 }

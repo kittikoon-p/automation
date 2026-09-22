@@ -5,10 +5,11 @@ import { useState } from "react";
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
+import ExportButtons from "@/components/ui/export-buttons";
 import MaintenanceFormModal from "@/components/maintenance/maintenance-form-modal";
 import { StatusPill } from "@/components/ui/status-pill";
 import { createClient } from "@/lib/supabase/client";
-import type { MaintenanceRecord } from "@/lib/db/types";
+import { canWrite, type MaintenanceRecord, type UserRole } from "@/lib/db/types";
 
 interface MachineOption {
   id: string;
@@ -19,14 +20,16 @@ interface MachineOption {
 export default function MaintenanceManager({
   records,
   machines,
-  isAdmin,
+  role,
   currentUserName,
 }: {
   records: MaintenanceRecord[];
   machines: MachineOption[];
-  isAdmin: boolean;
+  role: UserRole;
   currentUserName: string;
 }) {
+  const isAdmin = role === "admin";
+  const writer = canWrite(role);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<MaintenanceRecord | null>(null);
   const [deleting, setDeleting] = useState<string | null>(null);
@@ -57,18 +60,47 @@ export default function MaintenanceManager({
     router.refresh();
   }
 
+  const exportRows = records.map((r) => ({
+    machine_id: r.machines?.machine_id ?? "",
+    name: r.machines?.name ?? "",
+    maintenance_type: r.maintenance_type,
+    problem: r.problem,
+    action_taken: r.action_taken,
+    technician: r.technician ?? "",
+    maintenance_date: r.maintenance_date,
+    status: r.status,
+  }));
+
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-slate-400">ทั้งหมด {records.length} รายการ</p>
-        <button onClick={openAdd} className="btn-primary">
-          <Plus className="h-4 w-4" /> เพิ่มงานบำรุงรักษา
-        </button>
+        <div className="flex items-center gap-2">
+          <ExportButtons
+            rows={exportRows}
+            columns={[
+              { key: "machine_id", label: "Machine ID" },
+              { key: "name", label: "เครื่องจักร" },
+              { key: "maintenance_type", label: "ประเภท" },
+              { key: "problem", label: "ปัญหา" },
+              { key: "action_taken", label: "การดำเนินการ" },
+              { key: "technician", label: "ช่าง" },
+              { key: "maintenance_date", label: "วันที่" },
+              { key: "status", label: "สถานะ" },
+            ]}
+            filename="maintenance"
+          />
+          {writer && (
+            <button onClick={openAdd} className="btn-primary">
+              <Plus className="h-4 w-4" /> เพิ่มงานบำรุงรักษา
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="glass overflow-hidden rounded-2xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[860px] text-left text-sm">
             <thead className="border-b border-white/10 bg-white/5 text-xs uppercase tracking-wide text-slate-400">
               <tr>
                 <th className="px-4 py-3">เครื่องจักร</th>
@@ -78,13 +110,16 @@ export default function MaintenanceManager({
                 <th className="px-4 py-3">ช่าง</th>
                 <th className="px-4 py-3">วันที่</th>
                 <th className="px-4 py-3">สถานะ</th>
-                <th className="px-4 py-3 text-right">จัดการ</th>
+                {writer && <th className="px-4 py-3 text-right">จัดการ</th>}
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {records.length === 0 && (
                 <tr>
-                  <td colSpan={8} className="px-4 py-10 text-center text-slate-500">
+                  <td
+                    colSpan={writer ? 8 : 7}
+                    className="px-4 py-10 text-center text-slate-500"
+                  >
                     ไม่พบงานบำรุงรักษา
                   </td>
                 </tr>
@@ -117,27 +152,29 @@ export default function MaintenanceManager({
                   <td className="px-4 py-3">
                     <StatusPill value={r.status} />
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex justify-end gap-1">
-                      <button
-                        onClick={() => openEdit(r)}
-                        title="แก้ไข"
-                        className="icon-btn"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      {isAdmin && (
+                  {writer && (
+                    <td className="px-4 py-3">
+                      <div className="flex justify-end gap-1">
                         <button
-                          onClick={() => handleDelete(r.id)}
-                          disabled={deleting === r.id}
-                          title="ลบ"
-                          className="icon-btn icon-btn--danger disabled:opacity-50"
+                          onClick={() => openEdit(r)}
+                          title="แก้ไข"
+                          className="icon-btn"
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Pencil className="h-4 w-4" />
                         </button>
-                      )}
-                    </div>
-                  </td>
+                        {isAdmin && (
+                          <button
+                            onClick={() => handleDelete(r.id)}
+                            disabled={deleting === r.id}
+                            title="ลบ"
+                            className="icon-btn icon-btn--danger disabled:opacity-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
